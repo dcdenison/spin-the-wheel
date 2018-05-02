@@ -1,0 +1,44 @@
+// create servo object to control a continuous servo -- the Taza Spin the Grinding Wheel servo.
+Servo myservo;
+
+// NEW LINES HERE!   ******************************************************************
+// DC: you can play with these values so the wheel turns/stop
+const int servoStop = 88; //was 92 at Taza. Floats right there.
+const int servoMovingRight = 180;
+
+// this function gets executed once, when the photon boots up
+void setup()
+{
+  // attaches the servo on the D0 pin to the servo object
+  myservo.attach(D0);
+
+  // function to make the Taza wheel move
+  Particle.function("moveit", moveit);
+
+  // make the servo move to its initial position when the photon boots up
+  myservo.write(servoStop);
+}
+
+// this function gets executed continuously, as long as the photon has power
+void loop()
+{
+  // since there is nothing to execute, the photon will remain idle, looking at us 
+  // until we decide to hit one of its cloud functions, like moveit()
+}
+
+// NEW LINES HERE!   ******************************************************************
+// DC: you can play with this value so the wheel turns as long as wanted
+const int turnDelay = 5000;
+
+int moveit(String dummy)
+{
+
+  Particle.publish("Moving the Taza wheel!", "boom", 60, PRIVATE);
+
+  // the servo should be already at the initial position, but just in case
+  myservo.write(servoMovingRight);
+  delay(turnDelay);
+  myservo.write(servoStop);
+
+  return 0;
+}
